@@ -4,7 +4,7 @@ import {
   Phone, MapPin, Clock, MessageCircle, ArrowRight, ArrowUp, Send,
   Award, Users, GraduationCap, Sparkles, ShieldCheck, Cpu, Keyboard,
   Calculator, Wifi, Printer, FileSpreadsheet, MonitorSmartphone,
-  BookOpen, Presentation, Wrench, Globe2, Star, ChevronDown, PlayCircle,
+  BookOpen, Presentation, Wrench, Globe2, Star, ChevronDown,
   Building2, Timer, Rocket, Menu, X, Sun, Moon, Mail, CheckCircle2,
 } from "lucide-react";
 import { useReveal, useCountUp } from "@/hooks/use-reveal";
