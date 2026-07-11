@@ -213,11 +213,16 @@
 .reveal-left.is-visible { animation: fade-left .9s cubic-bezier(.2,.8,.2,1) forwards; }
 .reveal-right.is-visible { animation: fade-right .9s cubic-bezier(.2,.8,.2,1) forwards; }
 .reveal-zoom.is-visible { animation: zoom-in .8s cubic-bezier(.2,.8,.2,1) forwards; }
-.float-y { animation: float-y 6s ease-in-out infinite; }
-.blob-anim { animation: blob 18s ease-in-out infinite; }
-.marquee-track { animation: marquee 40s linear infinite; }
-.pulse-ring { animation: pulse-ring 1.8s ease-out infinite; }
+.float-y { animation: float-y 6s ease-in-out infinite; will-change: transform; }
+.blob-anim { animation: blob 22s ease-in-out infinite; will-change: transform, border-radius; }
+.marquee-track { animation: marquee 45s linear infinite; will-change: transform; }
+.pulse-ring { animation: pulse-ring 2s ease-out infinite; }
 .type-caret::after { content: "|"; margin-left: 2px; animation: caret 1s steps(1) infinite; color: var(--gold); }
+
+/* Perf: skip offscreen section work */
+section { content-visibility: auto; contain-intrinsic-size: 1px 800px; }
+/* Promote heavy backdrops off the main thread */
+.hero-grid-bg, .blob-anim { transform: translateZ(0); }
 
 .hero-grid-bg {
   background-image:
