@@ -16,6 +16,8 @@ import galleryCert from "@/assets/gallery-cert.jpg";
 import teacher1 from "@/assets/teacher-1.jpg";
 import teacher2 from "@/assets/teacher-2.jpg";
 import teacher3 from "@/assets/teacher-3.jpg";
+import logoAsset from "@/assets/pitman-logo.jpg.asset.json";
+const LOGO_URL = logoAsset.url;
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -83,9 +85,9 @@ function Index() {
         className={`fixed inset-0 z-[100] grid place-items-center bg-gradient-hero transition-opacity duration-500 ${loading ? "opacity-100" : "pointer-events-none opacity-0"}`}
       >
         <div className="flex flex-col items-center gap-4 text-white">
-          <div className="relative h-14 w-14">
-            <div className="absolute inset-0 rounded-full border-2 border-white/20" />
-            <div className="absolute inset-0 animate-spin rounded-full border-2 border-transparent border-t-[var(--gold)]" />
+          <div className="relative h-20 w-20">
+            <div className="absolute inset-0 animate-spin rounded-full border-2 border-transparent border-t-[var(--gold)] border-r-[var(--gold)]/40" />
+            <img src={LOGO_URL} alt="New Pitman Institute" className="absolute inset-1.5 h-[calc(100%-12px)] w-[calc(100%-12px)] rounded-full object-cover bg-white" />
           </div>
           <div className="font-display text-sm tracking-[0.3em]">NEW PITMAN INSTITUTE</div>
         </div>
@@ -164,8 +166,8 @@ function Navbar({ dark, setDark, scrolled, menuOpen, setMenuOpen }: {
         className={`mx-auto flex max-w-7xl items-center justify-between rounded-2xl px-4 py-3 transition-all duration-500 md:px-6 ${scrolled ? "mx-3 glass shadow-soft md:mx-auto" : "bg-transparent"}`}
       >
         <a href="#top" className="flex items-center gap-2.5">
-          <div className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-brand text-white shadow-elegant">
-            <span className="font-display text-lg font-black">P</span>
+          <div className="relative h-11 w-11 overflow-hidden rounded-xl bg-white shadow-elegant ring-1 ring-border">
+            <img src={LOGO_URL} alt="New Pitman Institute logo" className="h-full w-full object-cover" />
           </div>
           <div className="leading-tight">
             <div className="font-display text-[15px] font-extrabold tracking-tight text-foreground">NEW PITMAN</div>
@@ -991,8 +993,8 @@ function Footer() {
       <div className="relative mx-auto grid max-w-7xl grid-cols-1 gap-10 px-4 py-16 md:grid-cols-4 md:px-6">
         <div className="md:col-span-2">
           <div className="flex items-center gap-3">
-            <div className="grid h-11 w-11 place-items-center rounded-xl bg-gradient-accent text-black shadow-glow">
-              <span className="font-display text-lg font-black">P</span>
+            <div className="h-12 w-12 overflow-hidden rounded-xl bg-white shadow-glow ring-1 ring-white/20">
+              <img src={LOGO_URL} alt="New Pitman Institute" className="h-full w-full object-cover" />
             </div>
             <div>
               <div className="font-display text-lg font-extrabold">NEW PITMAN INSTITUTE</div>
