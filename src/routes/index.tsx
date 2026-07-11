@@ -156,6 +156,8 @@ const NAV_LINKS = [
 function Navbar({ dark, setDark, scrolled, menuOpen, setMenuOpen }: {
   dark: boolean; setDark: (v: boolean) => void; scrolled: boolean; menuOpen: boolean; setMenuOpen: (v: boolean) => void;
 }) {
+  const c = useContent();
+  const LOGO_URL = c.brand.logo;
   return (
     <header
       className={`fixed inset-x-0 top-0 z-[70] transition-all duration-500 ${scrolled ? "translate-y-2" : "translate-y-0"}`}
@@ -168,8 +170,8 @@ function Navbar({ dark, setDark, scrolled, menuOpen, setMenuOpen }: {
             <img src={LOGO_URL} alt="New Pitman Institute logo" className="h-full w-full object-cover" />
           </div>
           <div className="leading-tight">
-            <div className="font-display text-[15px] font-extrabold tracking-tight text-foreground">NEW PITMAN</div>
-            <div className="text-[10px] font-semibold tracking-[0.2em] text-muted-foreground">INSTITUTE · GOVT. REGD.</div>
+            <div className="font-display text-[15px] font-extrabold tracking-tight text-foreground">{c.brand.name.split(" ").slice(0, 2).join(" ")}</div>
+            <div className="text-[10px] font-semibold tracking-[0.2em] text-muted-foreground">{c.brand.tagline}</div>
           </div>
         </a>
 
