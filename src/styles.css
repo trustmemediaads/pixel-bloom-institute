@@ -214,7 +214,7 @@
 .reveal-right.is-visible { animation: fade-right .9s cubic-bezier(.2,.8,.2,1) forwards; }
 .reveal-zoom.is-visible { animation: zoom-in .8s cubic-bezier(.2,.8,.2,1) forwards; }
 .float-y { animation: float-y 6s ease-in-out infinite; will-change: transform; }
-.blob-anim { animation: blob 22s ease-in-out infinite; will-change: transform, border-radius; filter: blur(40px); }
+.blob-anim { animation: blob 22s ease-in-out infinite; will-change: transform, border-radius; }
 .marquee-track { animation: marquee 45s linear infinite; will-change: transform; }
 .pulse-ring { animation: pulse-ring 2s ease-out infinite; }
 .type-caret::after { content: "|"; margin-left: 2px; animation: caret 1s steps(1) infinite; color: var(--gold); }
