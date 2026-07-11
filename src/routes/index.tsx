@@ -358,7 +358,8 @@ function Hero() {
 
 /* ---------- MARQUEE ---------- */
 function Marquee() {
-  const items = ["MS Office", "Tally Prime + GST", "Advanced Excel", "Typing English", "Typing Hindi", "DTP", "Hardware", "CCC", "Digital Skills", "Accounting"];
+  const c = useContent();
+  const items = c.marquee;
   const row = [...items, ...items];
   return (
     <div className="border-y border-border bg-card py-4 overflow-hidden">
@@ -375,12 +376,9 @@ function Marquee() {
 
 /* ---------- STATS ---------- */
 function Stats() {
-  const stats = [
-    { n: 1000, suffix: "+", label: "Students Trained", icon: Users },
-    { n: 25, suffix: "+", label: "Professional Courses", icon: BookOpen },
-    { n: 10, suffix: "+", label: "Years of Experience", icon: Award },
-    { n: 95, suffix: "%", label: "Student Satisfaction", icon: Star },
-  ];
+  const c = useContent();
+  const icons = [Users, BookOpen, Award, Star];
+  const stats = c.stats.map((s, i) => ({ ...s, icon: icons[i % icons.length] }));
   return (
     <section className="mx-auto -mt-8 max-w-7xl px-4 md:px-6">
       <div className="reveal relative z-10 grid grid-cols-2 gap-4 rounded-3xl border border-border bg-card p-6 shadow-elegant md:grid-cols-4 md:p-8">
@@ -482,20 +480,9 @@ function About() {
 
 /* ---------- WHY US ---------- */
 function WhyUs() {
-  const items = [
-    { icon: ShieldCheck, title: "Government Registered", desc: "Official recognition & authentic certificates." },
-    { icon: Users, title: "Experienced Faculty", desc: "Patient, friendly and highly qualified mentors." },
-    { icon: Cpu, title: "Live Practical Training", desc: "Real assignments on live software daily." },
-    { icon: Timer, title: "Affordable Fees", desc: "Best value in Najafgarh with easy installments." },
-    { icon: Clock, title: "Flexible Timing", desc: "Morning, afternoon & evening batches." },
-    { icon: Award, title: "Certification", desc: "Industry-recognised course completion certificate." },
-    { icon: MonitorSmartphone, title: "Latest Computers", desc: "Modern hardware and current software versions." },
-    { icon: Rocket, title: "Career Guidance", desc: "Resume building and interview preparation." },
-    { icon: Building2, title: "Placement Assistance", desc: "Referrals to hiring partners in Delhi NCR." },
-    { icon: Users, title: "Small Batches", desc: "Personal attention for every learner." },
-    { icon: Star, title: "Personal Attention", desc: "1:1 doubt clearing sessions on demand." },
-    { icon: Sparkles, title: "Friendly Environment", desc: "Welcoming space where students thrive." },
-  ];
+  const c = useContent();
+  const iconRing = [ShieldCheck, Users, Cpu, Timer, Clock, Award, MonitorSmartphone, Rocket, Building2, Users, Star, Sparkles];
+  const items = c.whyUs.map((it, i) => ({ ...it, icon: iconRing[i % iconRing.length] }));
   return (
     <section id="why" className="relative overflow-hidden bg-muted/60 py-24">
       <div className="pointer-events-none absolute -top-20 left-1/2 h-80 w-[80%] -translate-x-1/2 rounded-full bg-gradient-brand opacity-10 blur-3xl" />
@@ -525,22 +512,12 @@ function WhyUs() {
 }
 
 /* ---------- COURSES ---------- */
-const COURSES = [
-  { icon: Cpu, name: "Basic Computer", dur: "2 Months", desc: "Windows, files, internet & digital fundamentals.", features: ["Fundamentals", "Windows", "Internet"] },
-  { icon: FileSpreadsheet, name: "MS Office", dur: "3 Months", desc: "Word, Excel, PowerPoint & Outlook for office work.", features: ["Word", "Excel", "PowerPoint"] },
-  { icon: FileSpreadsheet, name: "Advanced Excel", dur: "2 Months", desc: "Formulas, pivots, dashboards, VBA basics.", features: ["Formulas", "Pivot", "Dashboards"] },
-  { icon: Calculator, name: "Tally Prime with GST", dur: "3 Months", desc: "Complete accounting, inventory, GST returns.", features: ["Accounting", "GST", "Payroll"] },
-  { icon: Keyboard, name: "Typing English", dur: "1–3 Months", desc: "Speed & accuracy on standard keyboard.", features: ["30–60 WPM", "Accuracy", "Tests"] },
-  { icon: Keyboard, name: "Typing Hindi", dur: "1–3 Months", desc: "Krutidev / Mangal typing with speed tests.", features: ["Krutidev", "Mangal", "Practice"] },
-  { icon: Printer, name: "DTP", dur: "3 Months", desc: "Photoshop, CorelDraw, InDesign for print design.", features: ["Photoshop", "Corel", "InDesign"] },
-  { icon: Wrench, name: "Computer Hardware", dur: "3 Months", desc: "Assembly, troubleshooting, OS installation.", features: ["Assembly", "Repair", "OS Install"] },
-  { icon: Wifi, name: "Internet Skills", dur: "1 Month", desc: "Email, cloud, safe browsing, productivity.", features: ["Email", "Cloud", "Safety"] },
-  { icon: Globe2, name: "Digital Skills", dur: "2 Months", desc: "Digital India certifications & everyday apps.", features: ["UPI", "e-Gov", "DigiLocker"] },
-  { icon: Calculator, name: "Accounting Software", dur: "2 Months", desc: "BUSY / Marg / QuickBooks fundamentals.", features: ["BUSY", "Marg", "QB"] },
-  { icon: BookOpen, name: "CCC Preparation", dur: "1 Month", desc: "Focused prep for NIELIT CCC examination.", features: ["Syllabus", "Practice", "Mock"] },
-];
+const COURSE_ICONS = [Cpu, FileSpreadsheet, FileSpreadsheet, Calculator, Keyboard, Keyboard, Printer, Wrench, Wifi, Globe2, Calculator, BookOpen];
 
 function Courses() {
+  const c = useContent();
+  const PHONE_1 = c.contact.phone1;
+  const COURSES = c.courses.map((cr, i) => ({ ...cr, icon: COURSE_ICONS[i % COURSE_ICONS.length] }));
   return (
     <section id="courses" className="mx-auto max-w-7xl px-4 py-24 md:px-6">
       <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
@@ -556,19 +533,19 @@ function Courses() {
       </div>
 
       <div className="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {COURSES.map((c, i) => (
-          <div key={c.name} className="reveal card-lift group relative overflow-hidden rounded-2xl border border-border bg-card p-6" style={{ animationDelay: `${i * 30}ms` }}>
+        {COURSES.map((cr, i) => (
+          <div key={cr.name} className="reveal card-lift group relative overflow-hidden rounded-2xl border border-border bg-card p-6" style={{ animationDelay: `${i * 30}ms` }}>
             <div className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full bg-gradient-brand opacity-0 blur-3xl transition group-hover:opacity-20" />
             <div className="flex items-center justify-between">
               <div className="grid h-12 w-12 place-items-center rounded-xl bg-gradient-brand text-white shadow-soft">
-                <c.icon className="h-6 w-6" />
+                <cr.icon className="h-6 w-6" />
               </div>
-              <span className="rounded-full bg-muted px-3 py-1 text-xs font-semibold text-muted-foreground">{c.dur}</span>
+              <span className="rounded-full bg-muted px-3 py-1 text-xs font-semibold text-muted-foreground">{cr.dur}</span>
             </div>
-            <h3 className="mt-5 font-display text-xl font-bold">{c.name}</h3>
-            <p className="mt-1.5 text-sm text-muted-foreground">{c.desc}</p>
+            <h3 className="mt-5 font-display text-xl font-bold">{cr.name}</h3>
+            <p className="mt-1.5 text-sm text-muted-foreground">{cr.desc}</p>
             <ul className="mt-4 flex flex-wrap gap-2">
-              {c.features.map((f) => (
+              {cr.features.map((f) => (
                 <li key={f} className="rounded-md bg-muted px-2.5 py-1 text-xs font-medium text-foreground/80">{f}</li>
               ))}
             </ul>
@@ -587,13 +564,8 @@ function Courses() {
 
 /* ---------- PROCESS ---------- */
 function Process() {
-  const steps = [
-    { n: "01", title: "Admission", desc: "Choose your course, complete quick registration." },
-    { n: "02", title: "Training", desc: "Structured classes with theory + demonstration." },
-    { n: "03", title: "Practice", desc: "Daily lab practice with mentor support." },
-    { n: "04", title: "Certification", desc: "Assessment and official certificate." },
-    { n: "05", title: "Career Growth", desc: "Resume, interview prep and placement help." },
-  ];
+  const c = useContent();
+  const steps = c.process;
   return (
     <section className="relative overflow-hidden bg-gradient-hero py-24 text-white">
       <div className="absolute inset-0 hero-grid-bg" />
@@ -623,22 +595,17 @@ function Process() {
 
 /* ---------- FACILITIES ---------- */
 function Facilities() {
-  const items = [
-    "Modern Computer Lab", "AC Classroom", "Projector", "High-Speed Internet",
-    "Latest Software", "Practical Sessions", "Digital Classroom", "Individual Attention",
-    "Library", "Career Counseling",
-  ];
+  const c = useContent();
+  const items = c.facilities.items;
+  const imgs = c.facilities.images;
+  const openLB = (idx: number) => window.dispatchEvent(new CustomEvent("npi:lightbox", { detail: { group: "facilities", index: idx } }));
   return (
     <section className="mx-auto max-w-7xl px-4 py-24 md:px-6">
       <div className="grid gap-12 lg:grid-cols-[1fr_1.1fr] lg:gap-16">
         <div className="reveal-left">
           <SectionEyebrow>Facilities</SectionEyebrow>
-          <h2 className="mt-3 font-display text-4xl font-black md:text-5xl">
-            A campus built for <span className="text-gradient-brand">focused learning</span>.
-          </h2>
-          <p className="mt-4 max-w-lg text-muted-foreground">
-            Everything a modern computer learner needs — right in the heart of Najafgarh.
-          </p>
+          <h2 className="mt-3 font-display text-4xl font-black md:text-5xl">{c.facilities.title}</h2>
+          <p className="mt-4 max-w-lg text-muted-foreground">{c.facilities.body}</p>
           <ul className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2">
             {items.map((f) => (
               <li key={f} className="flex items-center gap-3 rounded-xl border border-border bg-card p-3.5">
@@ -649,9 +616,9 @@ function Facilities() {
           </ul>
         </div>
         <div className="reveal-right grid grid-cols-2 gap-4">
-          <img src={galleryLab} alt="Computer lab" width={1200} height={900} loading="lazy" className="col-span-2 h-64 rounded-2xl object-cover shadow-elegant tilt" />
-          <img src={galleryTyping} alt="Typing practice" width={1000} height={1300} loading="lazy" className="h-72 rounded-2xl object-cover shadow-soft tilt" />
-          <img src={galleryCert} alt="Certification" width={1000} height={1200} loading="lazy" className="h-72 rounded-2xl object-cover shadow-soft tilt" />
+          {imgs[0] && <img src={imgs[0]} alt="Facility 1" width={1200} height={900} loading="lazy" onClick={() => openLB(0)} className="col-span-2 h-64 cursor-zoom-in rounded-2xl object-cover shadow-elegant tilt" />}
+          {imgs[1] && <img src={imgs[1]} alt="Facility 2" width={1000} height={1300} loading="lazy" onClick={() => openLB(1)} className="h-72 cursor-zoom-in rounded-2xl object-cover shadow-soft tilt" />}
+          {imgs[2] && <img src={imgs[2]} alt="Facility 3" width={1000} height={1200} loading="lazy" onClick={() => openLB(2)} className="h-72 cursor-zoom-in rounded-2xl object-cover shadow-soft tilt" />}
         </div>
       </div>
     </section>
@@ -660,11 +627,9 @@ function Facilities() {
 
 /* ---------- TEACHERS ---------- */
 function Teachers() {
-  const list = [
-    { img: teacher1, name: "Rajesh Kumar", role: "Head — Computer Applications", exp: "12+ yrs", tags: ["MS Office", "Excel", "CCC"] },
-    { img: teacher2, name: "Priya Sharma", role: "Sr. Accounting Trainer", exp: "9+ yrs", tags: ["Tally Prime", "GST", "BUSY"] },
-    { img: teacher3, name: "Aman Verma", role: "Typing & DTP Expert", exp: "7+ yrs", tags: ["Typing", "Photoshop", "Corel"] },
-  ];
+  const c = useContent();
+  const list = c.teachers;
+  const openLB = (idx: number) => window.dispatchEvent(new CustomEvent("npi:lightbox", { detail: { group: "teachers", index: idx } }));
   return (
     <section id="faculty" className="bg-muted/60 py-24">
       <div className="mx-auto max-w-7xl px-4 md:px-6">
@@ -675,9 +640,9 @@ function Teachers() {
           </h2>
         </div>
         <div className="mt-14 grid gap-6 md:grid-cols-3">
-          {list.map((t) => (
+          {list.map((t, idx) => (
             <div key={t.name} className="reveal card-lift group overflow-hidden rounded-3xl bg-card shadow-soft">
-              <div className="relative h-80 overflow-hidden">
+              <div className="relative h-80 cursor-zoom-in overflow-hidden" onClick={() => openLB(idx)}>
                 <img src={t.img} alt={t.name} loading="lazy" className="h-full w-full object-cover transition duration-700 group-hover:scale-105" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
                 <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-white">
@@ -703,12 +668,8 @@ function Teachers() {
 
 /* ---------- TESTIMONIALS ---------- */
 function Testimonials() {
-  const reviews = [
-    { name: "Neha Kumari", course: "Tally Prime + GST", text: "The teachers explain everything patiently. I cleared my Tally basics in just 2 months and got a job at a local firm." },
-    { name: "Rohit Singh", course: "Advanced Excel", text: "Pivot tables and dashboards felt scary before. Now I use them daily at work. Best decision I made." },
-    { name: "Aarti Devi", course: "Typing Hindi", text: "Speed jumped from 15 to 40 WPM in Krutidev. Staff is very supportive and batches are small." },
-    { name: "Mohammad Salman", course: "DTP", text: "Learned Photoshop and CorelDraw hands-on. Started freelancing during the course itself." },
-  ];
+  const c = useContent();
+  const reviews = c.testimonials;
   const [i, setI] = useState(0);
   useEffect(() => {
     const t = setInterval(() => setI((v) => (v + 1) % reviews.length), 4500);
@@ -749,14 +710,10 @@ function Testimonials() {
 
 /* ---------- GALLERY ---------- */
 function Gallery() {
-  const imgs = [
-    { src: galleryLab, label: "Computer Lab", h: "h-72" },
-    { src: galleryTyping, label: "Typing Practice", h: "h-96" },
-    { src: galleryClass, label: "Classroom", h: "h-64" },
-    { src: galleryCert, label: "Certificates", h: "h-96" },
-    { src: heroImg, label: "Students", h: "h-72" },
-    { src: galleryClass, label: "Events", h: "h-64" },
-  ];
+  const c = useContent();
+  const heights = ["h-72", "h-96", "h-64", "h-96", "h-72", "h-64"];
+  const imgs = c.gallery.map((im, i) => ({ ...im, h: heights[i % heights.length] }));
+  const openLB = (idx: number) => window.dispatchEvent(new CustomEvent("npi:lightbox", { detail: { group: "gallery", index: idx } }));
   return (
     <section id="gallery" className="bg-muted/60 py-24">
       <div className="mx-auto max-w-7xl px-4 md:px-6">
@@ -768,7 +725,7 @@ function Gallery() {
         </div>
         <div className="mt-14 columns-1 gap-4 sm:columns-2 lg:columns-3 [&>*]:mb-4 [&>*]:break-inside-avoid">
           {imgs.map((im, i) => (
-            <div key={i} className="reveal-zoom group relative overflow-hidden rounded-2xl shadow-soft">
+            <div key={i} onClick={() => openLB(i)} className="reveal-zoom group relative cursor-zoom-in overflow-hidden rounded-2xl shadow-soft">
               <img src={im.src} alt={im.label} loading="lazy" className={`${im.h} w-full object-cover transition duration-700 group-hover:scale-110`} />
               <div className="absolute inset-0 flex items-end bg-gradient-to-t from-black/70 via-transparent p-4 opacity-0 transition group-hover:opacity-100">
                 <span className="font-display text-sm font-semibold text-white">{im.label}</span>
@@ -783,14 +740,8 @@ function Gallery() {
 
 /* ---------- FAQ ---------- */
 function FAQ() {
-  const items = [
-    { q: "Is New Pitman Institute government registered?", a: "Yes, we are a Government registered training institute. All certificates issued are authentic." },
-    { q: "Do you offer classes in Hindi and English?", a: "Yes. Every course is available in both Hindi and English medium as per student comfort." },
-    { q: "Are the batches small?", a: "Yes. We keep batches small so every student gets personal attention from the trainer." },
-    { q: "Do you help with placement?", a: "We provide career guidance, resume building, interview prep, and referrals to hiring partners in Delhi NCR." },
-    { q: "What are the timings and how do I enroll?", a: "Morning, afternoon and evening batches available. Fill the inquiry form or call us — admission takes a few minutes." },
-    { q: "Where is the institute located?", a: "28 Feet Road, Near Shiv Shakti Properties, Main Gopal Nagar, Prem Nagar, Najafgarh, Delhi 110043." },
-  ];
+  const c = useContent();
+  const items = c.faq;
   const [open, setOpen] = useState<number | null>(0);
   return (
     <section className="mx-auto max-w-4xl px-4 py-24 md:px-6">
@@ -826,6 +777,12 @@ function FAQ() {
 
 /* ---------- INQUIRY + CONTACT ---------- */
 function InquiryAndContact() {
+  const c = useContent();
+  const PHONE_1 = c.contact.phone1;
+  const PHONE_2 = c.contact.phone2;
+  const WHATSAPP = c.contact.whatsapp;
+  const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(c.contact.mapQuery)}&output=embed`;
+  const dirUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(c.contact.mapQuery)}`;
   return (
     <section id="contact" className="relative overflow-hidden py-24">
       <div className="pointer-events-none absolute -top-24 right-0 h-96 w-96 rounded-full bg-gradient-brand opacity-10 blur-3xl" />
@@ -843,7 +800,7 @@ function InquiryAndContact() {
           <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-elegant">
             <iframe
               title="New Pitman Institute location"
-              src="https://www.google.com/maps?q=Main+Gopal+Nagar+Prem+Nagar+Najafgarh+Delhi+110043&output=embed"
+              src={mapSrc}
               className="h-72 w-full"
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
@@ -851,8 +808,8 @@ function InquiryAndContact() {
           </div>
 
           <div className="grid gap-3 sm:grid-cols-2">
-            <InfoCard icon={MapPin} title="Address" lines={["28 Feet Road, Near Shiv Shakti Properties,", "Main Gopal Nagar, Prem Nagar,", "Najafgarh, Delhi — 110043"]} />
-            <InfoCard icon={Clock} title="Working Hours" lines={["Mon – Sat: 9:00 AM – 8:00 PM", "Sunday: Closed"]} />
+            <InfoCard icon={MapPin} title="Address" lines={c.contact.addressLines} />
+            <InfoCard icon={Clock} title="Working Hours" lines={c.contact.hoursLines} />
             <a href={`tel:${PHONE_1}`} className="card-lift rounded-2xl border border-border bg-card p-5">
               <div className="flex items-center gap-3">
                 <div className="grid h-11 w-11 place-items-center rounded-xl bg-gradient-brand text-white"><Phone className="h-5 w-5" /></div>
@@ -880,7 +837,7 @@ function InquiryAndContact() {
           </div>
 
           <a
-            href="https://www.google.com/maps/dir/?api=1&destination=Main+Gopal+Nagar+Prem+Nagar+Najafgarh+Delhi+110043"
+            href={dirUrl}
             target="_blank" rel="noreferrer"
             className="magnetic-btn inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-brand px-5 py-4 font-semibold text-white shadow-elegant"
           >
@@ -907,7 +864,10 @@ function InfoCard({ icon: Icon, title, lines }: { icon: any; title: string; line
 }
 
 function InquiryForm() {
-  const [form, setForm] = useState({ name: "", phone: "", email: "", course: "MS Office", message: "" });
+  const c = useContent();
+  const PHONE_1 = c.contact.phone1;
+  const WHATSAPP = c.contact.whatsapp;
+  const [form, setForm] = useState({ name: "", phone: "", email: "", course: c.courses[0]?.name || "MS Office", message: "" });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [sent, setSent] = useState(false);
 
@@ -945,7 +905,7 @@ function InquiryForm() {
         </Field>
         <Field label="Course">
           <select className={input} value={form.course} onChange={(e) => setForm({ ...form, course: e.target.value })}>
-            {COURSES.map((c) => <option key={c.name}>{c.name}</option>)}
+            {c.courses.map((cr) => <option key={cr.name}>{cr.name}</option>)}
           </select>
         </Field>
       </div>
@@ -982,6 +942,10 @@ function Field({ label, error, children }: { label: string; error?: string; chil
 
 /* ---------- FOOTER ---------- */
 function Footer() {
+  const c = useContent();
+  const PHONE_1 = c.contact.phone1;
+  const WHATSAPP = c.contact.whatsapp;
+  const LOGO_URL = c.brand.logo;
   return (
     <footer className="relative overflow-hidden bg-gradient-hero text-white">
       <div className="absolute inset-0 hero-grid-bg" />
@@ -992,18 +956,15 @@ function Footer() {
               <img src={LOGO_URL} alt="New Pitman Institute" className="h-full w-full object-cover" />
             </div>
             <div>
-              <div className="font-display text-lg font-extrabold">NEW PITMAN INSTITUTE</div>
-              <div className="text-xs tracking-widest text-white/70">GOVT. REGISTERED · NAJAFGARH, DELHI</div>
+              <div className="font-display text-lg font-extrabold">{c.brand.name}</div>
+              <div className="text-xs tracking-widest text-white/70">{c.brand.tagline}</div>
             </div>
           </div>
-          <p className="mt-4 max-w-md text-sm text-white/80">
-            Practical computer education for real careers. English & Hindi medium. Small batches.
-            Trusted by families across Najafgarh since 2014.
-          </p>
+          <p className="mt-4 max-w-md text-sm text-white/80">{c.footer.about}</p>
           <div className="mt-6 flex gap-3">
             <a href={`tel:${PHONE_1}`} aria-label="Call" className="grid h-10 w-10 place-items-center rounded-xl bg-white/10 hover:bg-white/20"><Phone className="h-4 w-4" /></a>
             <a href={`https://wa.me/${WHATSAPP}`} aria-label="WhatsApp" className="grid h-10 w-10 place-items-center rounded-xl bg-white/10 hover:bg-white/20"><MessageCircle className="h-4 w-4" /></a>
-            <a href="mailto:info@newpitmaninstitute.in" aria-label="Email" className="grid h-10 w-10 place-items-center rounded-xl bg-white/10 hover:bg-white/20"><Mail className="h-4 w-4" /></a>
+            <a href={`mailto:${c.contact.email}`} aria-label="Email" className="grid h-10 w-10 place-items-center rounded-xl bg-white/10 hover:bg-white/20"><Mail className="h-4 w-4" /></a>
           </div>
         </div>
 
@@ -1019,8 +980,8 @@ function Footer() {
         <div>
           <div className="font-display text-sm font-semibold tracking-widest text-white/70">POPULAR COURSES</div>
           <ul className="mt-4 space-y-2 text-sm">
-            {["Tally Prime + GST", "Advanced Excel", "MS Office", "DTP", "Typing English", "CCC Preparation"].map((c) => (
-              <li key={c}><a href="#courses" className="text-white/85 transition hover:text-[var(--gold)]">{c}</a></li>
+            {c.footer.popularCourses.map((pc) => (
+              <li key={pc}><a href="#courses" className="text-white/85 transition hover:text-[var(--gold)]">{pc}</a></li>
             ))}
           </ul>
         </div>
@@ -1028,10 +989,11 @@ function Footer() {
 
       <div className="relative border-t border-white/10">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-3 px-4 py-5 text-xs text-white/70 md:flex-row md:px-6">
-          <div>© {new Date().getFullYear()} New Pitman Institute. All rights reserved.</div>
+          <div>© {new Date().getFullYear()} {c.brand.name}. All rights reserved.</div>
           <div className="flex gap-5">
             <a href="#" className="hover:text-white">Privacy Policy</a>
             <a href="#" className="hover:text-white">Terms</a>
+            <Link to="/admin" className="hover:text-white">Admin</Link>
           </div>
         </div>
       </div>
