@@ -244,7 +244,9 @@ function Navbar({ dark, setDark, scrolled, menuOpen, setMenuOpen }: {
 
 /* ---------- HERO ---------- */
 function Hero() {
-  const words = ["Career", "Skills", "Future", "Confidence"];
+  const c = useContent();
+  const PHONE_1 = c.contact.phone1;
+  const words = c.hero.rotatingWords.length ? c.hero.rotatingWords : ["Career"];
   const [wi, setWi] = useState(0);
   const [txt, setTxt] = useState("");
   const [del, setDel] = useState(false);
@@ -276,37 +278,34 @@ function Hero() {
         <div>
           <div className="reveal inline-flex items-center gap-2 rounded-full glass-dark px-3 py-1.5 text-xs font-semibold text-white/90">
             <ShieldCheck className="h-3.5 w-3.5 text-[var(--gold)]" />
-            Government Registered · Since 2014
+            {c.hero.badge}
           </div>
           <h1 className="reveal mt-5 font-display text-4xl font-black leading-[1.05] tracking-tight md:text-6xl lg:text-[68px]">
-            Build Your{" "}
+            {c.hero.titleLine1}{" "}
             <span className="text-gradient-accent type-caret inline-block">{txt}</span>
             <br />
-            with Professional
-            <br />
-            Computer Education
+            {c.hero.titleLine2}
           </h1>
           <p className="reveal mt-6 max-w-xl text-base leading-relaxed text-white/80 md:text-lg">
-            Practical training in MS Office, Tally Prime with GST, Advanced Excel, Typing, DTP,
-            Hardware and career skills — taught in English & Hindi at our Najafgarh campus.
+            {c.hero.subtitle}
           </p>
 
           <div className="reveal mt-8 flex flex-wrap items-center gap-3">
             <a href="#inquiry" className="magnetic-btn ripple inline-flex items-center gap-2 rounded-xl bg-gradient-accent px-6 py-3.5 font-semibold text-black shadow-glow">
-              Apply Now <ArrowRight className="h-4 w-4" />
+              {c.hero.ctaPrimary} <ArrowRight className="h-4 w-4" />
             </a>
             <a href="#courses" className="magnetic-btn inline-flex items-center gap-2 rounded-xl glass-dark px-6 py-3.5 font-semibold text-white">
-              Explore Courses
+              {c.hero.ctaSecondary}
             </a>
             <a href={`tel:${PHONE_1}`} className="magnetic-btn inline-flex items-center gap-2 rounded-xl border border-white/20 px-6 py-3.5 font-semibold text-white/90 hover:bg-white/10">
-              <Phone className="h-4 w-4" /> Call Now
+              <Phone className="h-4 w-4" /> {c.hero.ctaTertiary}
             </a>
           </div>
 
           <div className="reveal mt-10 flex flex-wrap items-center gap-6 text-sm text-white/70">
-            <div className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-[var(--gold)]" /> Small batch size</div>
-            <div className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-[var(--gold)]" /> Certificate on completion</div>
-            <div className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-[var(--gold)]" /> Flexible timings</div>
+            {c.hero.checks.map((chk) => (
+              <div key={chk} className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-[var(--gold)]" /> {chk}</div>
+            ))}
           </div>
         </div>
 
@@ -314,11 +313,12 @@ function Hero() {
           <div className="absolute -inset-6 rounded-[2rem] bg-gradient-accent opacity-20 blur-3xl" />
           <div className="animated-border relative overflow-hidden rounded-[1.75rem] shadow-elegant">
             <img
-              src={heroImg}
+              src={c.hero.image}
               alt="Students learning at New Pitman Institute computer lab"
               width={1600}
               height={1104}
-              className="h-[520px] w-full object-cover"
+              className="h-[520px] w-full cursor-zoom-in object-cover"
+              onClick={() => window.dispatchEvent(new CustomEvent("npi:lightbox", { detail: { src: c.hero.image, label: "Hero" } }))}
             />
             {/* floating info card */}
             <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between gap-3 rounded-2xl glass p-3 text-foreground shadow-soft">
@@ -327,8 +327,8 @@ function Hero() {
                   <GraduationCap className="h-5 w-5" />
                 </div>
                 <div>
-                  <div className="text-xs text-muted-foreground">Live batches</div>
-                  <div className="text-sm font-semibold">Admissions Open</div>
+                  <div className="text-xs text-muted-foreground">{c.hero.floatingSubtitle}</div>
+                  <div className="text-sm font-semibold">{c.hero.floatingTitle}</div>
                 </div>
               </div>
               <a href="#inquiry" className="rounded-lg bg-gradient-brand px-3 py-2 text-xs font-semibold text-white">Enroll</a>
