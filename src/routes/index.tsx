@@ -412,12 +412,8 @@ function StatCard({ n, suffix, label, icon: Icon }: { n: number; suffix: string;
 
 /* ---------- ABOUT ---------- */
 function About() {
-  const points = [
-    { icon: Award, title: "Govt. Registered", desc: "Officially recognised institute." },
-    { icon: Presentation, title: "Practical Learning", desc: "Hands-on training on every module." },
-    { icon: Users, title: "Experienced Trainers", desc: "Friendly mentors with industry background." },
-    { icon: Rocket, title: "Career Guidance", desc: "Placement assistance & job-ready portfolio." },
-  ];
+  const c = useContent();
+  const pointIcons = [Award, Presentation, Users, Rocket];
   return (
     <section id="about" className="mx-auto max-w-7xl px-4 py-24 md:px-6">
       <div className="grid gap-14 lg:grid-cols-[1fr_1.1fr] lg:gap-20">
@@ -425,18 +421,19 @@ function About() {
           <div className="relative">
             <div className="absolute -inset-4 rounded-3xl bg-gradient-brand opacity-10 blur-2xl" />
             <img
-              src={galleryClass}
+              src={c.about.image}
               alt="Digital classroom at New Pitman Institute"
               width={1200} height={900}
               loading="lazy"
-              className="relative rounded-3xl shadow-elegant tilt"
+              className="relative cursor-zoom-in rounded-3xl shadow-elegant tilt"
+              onClick={() => window.dispatchEvent(new CustomEvent("npi:lightbox", { detail: { src: c.about.image, label: "About" } }))}
             />
             <div className="absolute -bottom-6 -right-6 hidden rounded-2xl bg-card p-5 shadow-elegant md:block">
               <div className="flex items-center gap-3">
                 <div className="grid h-12 w-12 place-items-center rounded-xl bg-gradient-accent text-black"><Award className="h-6 w-6" /></div>
                 <div>
                   <div className="text-xs uppercase tracking-widest text-muted-foreground">Since</div>
-                  <div className="font-display text-2xl font-black">2014</div>
+                  <div className="font-display text-2xl font-black">{c.about.sinceYear}</div>
                 </div>
               </div>
             </div>
@@ -444,39 +441,37 @@ function About() {
         </div>
 
         <div className="reveal-right">
-          <SectionEyebrow>About the institute</SectionEyebrow>
+          <SectionEyebrow>{c.about.eyebrow}</SectionEyebrow>
           <h2 className="mt-3 font-display text-4xl font-black leading-tight md:text-5xl">
-            A <span className="text-gradient-brand">trusted</span> name in computer<br />
-            education across Najafgarh.
+            {c.about.title}
           </h2>
-          <p className="mt-5 max-w-xl text-muted-foreground">
-            New Pitman Institute is a Government registered training centre delivering practical,
-            career-oriented computer education. Our mission is simple — every student should walk out
-            job-ready with skills that matter.
-          </p>
+          <p className="mt-5 max-w-xl text-muted-foreground">{c.about.body}</p>
 
           <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
-            {points.map((p) => (
-              <div key={p.title} className="card-lift group flex items-start gap-4 rounded-2xl border border-border bg-card p-5">
-                <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-muted text-[var(--brand)] transition group-hover:bg-gradient-brand group-hover:text-white">
-                  <p.icon className="h-5 w-5" />
+            {c.about.points.map((p, i) => {
+              const Icon = pointIcons[i % pointIcons.length];
+              return (
+                <div key={i} className="card-lift group flex items-start gap-4 rounded-2xl border border-border bg-card p-5">
+                  <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-muted text-[var(--brand)] transition group-hover:bg-gradient-brand group-hover:text-white">
+                    <Icon className="h-5 w-5" />
+                  </div>
+                  <div className="min-w-0">
+                    <div className="font-display font-semibold">{p.title}</div>
+                    <div className="text-sm text-muted-foreground">{p.desc}</div>
+                  </div>
                 </div>
-                <div className="min-w-0">
-                  <div className="font-display font-semibold">{p.title}</div>
-                  <div className="text-sm text-muted-foreground">{p.desc}</div>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           <div className="mt-8 grid grid-cols-2 gap-4">
             <div className="rounded-2xl bg-gradient-brand p-5 text-white shadow-elegant">
-              <div className="text-xs uppercase tracking-widest text-white/80">Our Mission</div>
-              <p className="mt-2 text-sm">Empower every learner with practical digital skills that unlock real careers.</p>
+              <div className="text-xs uppercase tracking-widest text-white/80">{c.about.missionTitle}</div>
+              <p className="mt-2 text-sm">{c.about.missionText}</p>
             </div>
             <div className="rounded-2xl border border-border bg-card p-5">
-              <div className="text-xs uppercase tracking-widest text-muted-foreground">Our Vision</div>
-              <p className="mt-2 text-sm">Be Delhi's most trusted neighbourhood institute for job-ready computer education.</p>
+              <div className="text-xs uppercase tracking-widest text-muted-foreground">{c.about.visionTitle}</div>
+              <p className="mt-2 text-sm">{c.about.visionText}</p>
             </div>
           </div>
         </div>
