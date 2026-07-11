@@ -63,15 +63,21 @@ function Index() {
   }, []);
 
   useEffect(() => {
+    let raf = 0;
     const onScroll = () => {
-      setScrolled(window.scrollY > 12);
-      const h = document.documentElement;
-      const p = h.scrollTop / (h.scrollHeight - h.clientHeight);
-      setProgress(Math.min(1, Math.max(0, p)));
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        raf = 0;
+        const y = window.scrollY;
+        setScrolled(y > 12);
+        const h = document.documentElement;
+        const p = y / (h.scrollHeight - h.clientHeight);
+        setProgress(Math.min(1, Math.max(0, p)));
+      });
     };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => { window.removeEventListener("scroll", onScroll); if (raf) cancelAnimationFrame(raf); };
   }, []);
 
   useEffect(() => {
@@ -100,8 +106,8 @@ function Index() {
 
       <Navbar dark={dark} setDark={setDark} scrolled={scrolled} menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
       <Hero />
-      <Marquee />
       <Stats />
+      <Marquee />
       <About />
       <WhyUs />
       <Courses />
@@ -383,7 +389,7 @@ function Stats() {
   ];
   return (
     <section className="mx-auto -mt-8 max-w-7xl px-4 md:px-6">
-      <div className="reveal grid grid-cols-2 gap-4 rounded-3xl bg-card p-6 shadow-elegant md:grid-cols-4 md:p-8">
+      <div className="reveal relative z-10 grid grid-cols-2 gap-4 rounded-3xl border border-border bg-card p-6 shadow-elegant md:grid-cols-4 md:p-8">
         {stats.map((s) => (
           <StatCard key={s.label} {...s} />
         ))}
