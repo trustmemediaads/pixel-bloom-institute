@@ -1,5 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useRef, useState } from "react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Phone, MapPin, Clock, MessageCircle, ArrowRight, ArrowUp, Send,
   Award, Users, GraduationCap, Sparkles, ShieldCheck, Cpu, Keyboard,
@@ -8,16 +8,8 @@ import {
   Building2, Timer, Rocket, Menu, X, Sun, Moon, Mail, CheckCircle2,
 } from "lucide-react";
 import { useReveal, useCountUp } from "@/hooks/use-reveal";
-import heroImg from "@/assets/hero-students.jpg";
-import galleryLab from "@/assets/gallery-lab.jpg";
-import galleryTyping from "@/assets/gallery-typing.jpg";
-import galleryClass from "@/assets/gallery-class.jpg";
-import galleryCert from "@/assets/gallery-cert.jpg";
-import teacher1 from "@/assets/teacher-1.jpg";
-import teacher2 from "@/assets/teacher-2.jpg";
-import teacher3 from "@/assets/teacher-3.jpg";
-import logoAsset from "@/assets/pitman-logo.jpg.asset.json";
-const LOGO_URL = logoAsset.url;
+import { useContent } from "@/lib/site-content";
+import { Lightbox } from "@/components/lightbox";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -45,11 +37,11 @@ export const Route = createFileRoute("/")({
   }),
 });
 
-const PHONE_1 = "9911152004";
-const PHONE_2 = "9911152003";
-const WHATSAPP = "919911152004";
-
 function Index() {
+  const c = useContent();
+  const LOGO_URL = c.brand.logo;
+  const PHONE_1 = c.contact.phone1;
+  const WHATSAPP = c.contact.whatsapp;
   useReveal();
   const [dark, setDark] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -95,7 +87,7 @@ function Index() {
             <div className="absolute inset-0 animate-spin rounded-full border-2 border-transparent border-t-[var(--gold)] border-r-[var(--gold)]/40" />
             <img src={LOGO_URL} alt="New Pitman Institute" className="absolute inset-1.5 h-[calc(100%-12px)] w-[calc(100%-12px)] rounded-full object-cover bg-white" />
           </div>
-          <div className="font-display text-sm tracking-[0.3em]">NEW PITMAN INSTITUTE</div>
+          <div className="font-display text-sm tracking-[0.3em]">{c.brand.name}</div>
         </div>
       </div>
 
