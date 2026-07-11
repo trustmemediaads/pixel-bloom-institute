@@ -48,6 +48,19 @@ function Index() {
   const [progress, setProgress] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [lb, setLb] = useState<{ items: { src: string; label?: string }[]; index: number } | null>(null);
+
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const d = (e as CustomEvent).detail as { group?: string; index?: number; src?: string; label?: string };
+      if (d.group === "gallery") setLb({ items: c.gallery, index: d.index ?? 0 });
+      else if (d.group === "teachers") setLb({ items: c.teachers.map((t) => ({ src: t.img, label: t.name })), index: d.index ?? 0 });
+      else if (d.group === "facilities") setLb({ items: c.facilities.images.map((src, i) => ({ src, label: `Facility ${i + 1}` })), index: d.index ?? 0 });
+      else if (d.src) setLb({ items: [{ src: d.src, label: d.label }], index: 0 });
+    };
+    window.addEventListener("npi:lightbox", handler);
+    return () => window.removeEventListener("npi:lightbox", handler);
+  }, [c.gallery, c.teachers, c.facilities.images]);
 
   useEffect(() => {
     const t = setTimeout(() => setLoading(false), 700);
@@ -111,6 +124,12 @@ function Index() {
       <FAQ />
       <InquiryAndContact />
       <Footer />
+      <Lightbox
+        items={lb?.items || []}
+        index={lb ? lb.index : null}
+        onClose={() => setLb(null)}
+        onIndexChange={(i) => setLb((prev) => (prev ? { ...prev, index: i } : prev))}
+      />
 
       {/* Floating side buttons */}
       <div className="fixed bottom-5 right-5 z-50 flex flex-col gap-3">
