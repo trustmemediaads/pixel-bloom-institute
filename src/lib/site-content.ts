@@ -228,28 +228,60 @@ let currentContent: SiteContent = DEFAULT_CONTENT;
 let hydrated = false;
 const listeners = new Set<() => void>();
 
-function loadFromStorage(): SiteContent {
+function loadCache(): SiteContent {
   if (typeof window === "undefined") return DEFAULT_CONTENT;
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY);
     if (!raw) return DEFAULT_CONTENT;
-    const parsed = JSON.parse(raw);
-    return deepMerge(DEFAULT_CONTENT, parsed);
+    return deepMerge(DEFAULT_CONTENT, JSON.parse(raw));
   } catch {
     return DEFAULT_CONTENT;
   }
 }
 
-function ensureHydrated() {
+function saveCache(next: SiteContent) {
+  if (typeof window === "undefined") return;
+  try { window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next)); } catch { /* quota */ }
+}
+
+function applyRemote(remote: unknown) {
+  const merged = deepMerge(DEFAULT_CONTENT, remote);
+  currentContent = merged;
+  saveCache(merged);
+  listeners.forEach((l) => l());
+}
+
+async function ensureHydrated() {
   if (hydrated || typeof window === "undefined") return;
-  currentContent = loadFromStorage();
   hydrated = true;
-  window.addEventListener("storage", (e) => {
-    if (e.key === STORAGE_KEY) {
-      currentContent = loadFromStorage();
-      listeners.forEach((l) => l());
-    }
-  });
+  // Warm from cache immediately so UI doesn't flash defaults.
+  currentContent = loadCache();
+  listeners.forEach((l) => l());
+
+  const { supabase } = await import("@/integrations/supabase/client");
+  // Initial fetch
+  supabase
+    .from("site_content")
+    .select("data")
+    .eq("id", "main")
+    .maybeSingle()
+    .then(({ data }) => {
+      if (data && data.data && typeof data.data === "object") applyRemote(data.data);
+    });
+  // Realtime subscription — updates every open browser instantly
+  const channel = supabase
+    .channel("site_content_main")
+    .on(
+      "postgres_changes",
+      { event: "*", schema: "public", table: "site_content", filter: "id=eq.main" },
+      (payload) => {
+        const row = (payload.new ?? payload.old) as { data?: unknown } | null;
+        if (row?.data && typeof row.data === "object") applyRemote(row.data);
+      },
+    )
+    .subscribe();
+  // Keep channel alive for the app lifetime.
+  void channel;
 }
 
 function subscribe(cb: () => void) {
@@ -271,18 +303,22 @@ export function useContent(): SiteContent {
   return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 }
 
-export function setContent(next: SiteContent) {
+// Optimistic local update — the realtime channel will confirm shortly after.
+export function setContentLocal(next: SiteContent) {
   currentContent = next;
-  if (typeof window !== "undefined") {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-  }
+  saveCache(next);
   listeners.forEach((l) => l());
 }
 
-export function resetContent() {
-  if (typeof window !== "undefined") window.localStorage.removeItem(STORAGE_KEY);
-  currentContent = DEFAULT_CONTENT;
-  listeners.forEach((l) => l());
+// Persist to Lovable Cloud. Requires the admin password.
+export async function saveContent(next: SiteContent, password: string): Promise<void> {
+  setContentLocal(next);
+  const { saveSiteContent } = await import("./site-content.functions");
+  await saveSiteContent({ data: { data: next, password } });
+}
+
+export async function resetContentToDefaults(password: string): Promise<void> {
+  await saveContent(DEFAULT_CONTENT, password);
 }
 
 export async function fileToDataUrl(file: File): Promise<string> {
@@ -306,10 +342,19 @@ export function isAdminAuthed(): boolean {
 export function adminLogin(email: string, password: string): boolean {
   if (email.trim().toLowerCase() === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
     window.localStorage.setItem(AUTH_KEY, "1");
+    window.localStorage.setItem("npi_admin_pw_v1", password);
     return true;
   }
   return false;
 }
 export function adminLogout() {
-  if (typeof window !== "undefined") window.localStorage.removeItem(AUTH_KEY);
+  if (typeof window !== "undefined") {
+    window.localStorage.removeItem(AUTH_KEY);
+    window.localStorage.removeItem("npi_admin_pw_v1");
+  }
+}
+
+export function getAdminPassword(): string | null {
+  if (typeof window === "undefined") return null;
+  return window.localStorage.getItem("npi_admin_pw_v1");
 }

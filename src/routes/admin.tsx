@@ -2,8 +2,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { LogOut, Save, RotateCcw, ImagePlus, Plus, Trash2, ExternalLink } from "lucide-react";
 import {
-  useContent, setContent, resetContent, fileToDataUrl,
-  isAdminAuthed, adminLogin, adminLogout,
+  useContent, saveContent, resetContentToDefaults, fileToDataUrl,
+  isAdminAuthed, adminLogin, adminLogout, getAdminPassword,
   DEFAULT_CONTENT, type SiteContent,
 } from "@/lib/site-content";
 
@@ -56,11 +56,33 @@ function AdminEditor({ onLogout }: { onLogout: () => void }) {
   const [draft, setDraft] = useState<SiteContent>(live);
   const [tab, setTab] = useState<SectionKey>("hero");
   const [saved, setSaved] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
 
   const dirty = useMemo(() => JSON.stringify(draft) !== JSON.stringify(live), [draft, live]);
 
-  const save = () => { setContent(draft); setSaved(true); setTimeout(() => setSaved(false), 1600); };
-  const reset = () => { if (confirm("Reset ALL content back to defaults?")) { resetContent(); setDraft(DEFAULT_CONTENT); } };
+  const save = async () => {
+    const pw = getAdminPassword();
+    if (!pw) { setErr("Session expired — please log in again."); return; }
+    setSaving(true); setErr(null);
+    try {
+      await saveContent(draft, pw);
+      setSaved(true); setTimeout(() => setSaved(false), 1600);
+    } catch (e) {
+      setErr(e instanceof Error ? e.message : "Save failed");
+    } finally {
+      setSaving(false);
+    }
+  };
+  const reset = async () => {
+    if (!confirm("Reset ALL content back to defaults?")) return;
+    const pw = getAdminPassword();
+    if (!pw) { setErr("Session expired — please log in again."); return; }
+    setSaving(true); setErr(null);
+    try { await resetContentToDefaults(pw); setDraft(DEFAULT_CONTENT); }
+    catch (e) { setErr(e instanceof Error ? e.message : "Reset failed"); }
+    finally { setSaving(false); }
+  };
 
   const update = (patch: Partial<SiteContent>) => setDraft({ ...draft, ...patch });
 
@@ -73,12 +95,14 @@ function AdminEditor({ onLogout }: { onLogout: () => void }) {
         </div>
         <div className="flex items-center gap-2">
           {saved && <span className="text-xs font-semibold text-emerald-600">✓ Saved</span>}
+          {saving && <span className="text-xs font-semibold text-sky-600">Saving…</span>}
+          {err && <span className="max-w-[220px] truncate text-xs font-semibold text-destructive" title={err}>⚠ {err}</span>}
           {dirty && <span className="text-xs font-semibold text-amber-600">● Unsaved</span>}
           <Link to="/" target="_blank" className="hidden items-center gap-1.5 rounded-lg border border-border bg-background px-3 py-2 text-xs font-semibold hover:bg-muted md:inline-flex">
             <ExternalLink className="h-3.5 w-3.5" /> View Site
           </Link>
-          <button onClick={reset} className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-background px-3 py-2 text-xs font-semibold hover:bg-muted"><RotateCcw className="h-3.5 w-3.5" /> Reset</button>
-          <button onClick={save} disabled={!dirty} className="inline-flex items-center gap-1.5 rounded-lg bg-gradient-brand px-4 py-2 text-xs font-semibold text-white shadow-soft disabled:opacity-50"><Save className="h-3.5 w-3.5" /> Save</button>
+          <button onClick={reset} disabled={saving} className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-background px-3 py-2 text-xs font-semibold hover:bg-muted disabled:opacity-50"><RotateCcw className="h-3.5 w-3.5" /> Reset</button>
+          <button onClick={save} disabled={!dirty || saving} className="inline-flex items-center gap-1.5 rounded-lg bg-gradient-brand px-4 py-2 text-xs font-semibold text-white shadow-soft disabled:opacity-50"><Save className="h-3.5 w-3.5" /> {saving ? "Saving…" : "Save"}</button>
           <button onClick={onLogout} className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-background px-3 py-2 text-xs font-semibold hover:bg-muted"><LogOut className="h-3.5 w-3.5" /> Logout</button>
         </div>
       </header>
