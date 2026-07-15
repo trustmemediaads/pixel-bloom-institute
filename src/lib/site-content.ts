@@ -7,7 +7,8 @@ import galleryCert from "@/assets/gallery-cert.jpg";
 import teacher1 from "@/assets/teacher-1.jpg";
 import teacher2 from "@/assets/teacher-2.jpg";
 import teacher3 from "@/assets/teacher-3.jpg";
-import logoAsset from "@/assets/pitman-logo.jpg.asset.json";
+// Logo served from /public so it works on any host (Lovable, Vercel, etc.)
+const logoAsset = { url: "/pitman-logo.jpg" };
 
 export type SiteContent = {
   brand: { name: string; tagline: string; logo: string };
